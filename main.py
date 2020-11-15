@@ -3,7 +3,6 @@ from sklearn.datasets import load_digits
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
-from my_clf import KNN, train_myKNN
 
 
 def main():
@@ -15,22 +14,22 @@ def main():
     y = digits.target
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-    #clf = KNeighborsClassifier(n_neighbors=3)
+    clf = KNeighborsClassifier(n_neighbors=3)
 
-    #clf.fit(X_train, y_train)
-    clf = train_myKNN(X_train,y_train,X_test,y_test)
-    #predicted = clf.predict(X_test)
-   # confusion_matrix(y_test, predicted)
+    clf.fit(X_train, y_train)
 
-    #image_with_prediction = list(zip(digits.images, clf.predict(X)))
+    predicted = clf.predict(X_test)
+    confusion_matrix(y_test, predicted)
 
-    # for pos, (image, prediction) in enumerate(image_with_prediction[:20]):
-    #     plt.subplot(4, 5, pos + 1)
-    #     plt.axis('off')
-    #     plt.imshow(image, cmap=plt.cm.gray_r)
-    #     plt.title("Prediction: %i" % prediction)
+    image_with_prediction = list(zip(digits.images, clf.predict(X)))
 
-   # plt.show()
+    for pos, (image, prediction) in enumerate(image_with_prediction[:20]):
+        plt.subplot(4, 5, pos + 1)
+        plt.axis('off')
+        plt.imshow(image, cmap=plt.cm.gray_r)
+        plt.title("Prediction: %i" % prediction)
+
+    plt.show()
 
 
 if __name__ == "__main__":
