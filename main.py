@@ -1,3 +1,5 @@
+from time import time
+import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_digits
 from sklearn.neighbors import KNeighborsClassifier
@@ -5,32 +7,90 @@ from sklearn.metrics import confusion_matrix
 from sklearn.model_selection import train_test_split
 
 
+# Student ID: 201521233
+
+
 def main():
     digits = load_digits()
 
     n_samples = len(digits.images)
+    print('the number of instance is: ', digits.data.shape[1])
+    print('the number of features of instance is', digits.data.shape[1])
 
     X = digits.images.reshape((n_samples, -1))
     y = digits.target
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
-    clf = KNeighborsClassifier(n_neighbors=3)
+    # use the built-in clf
+    clf0 = KNeighborsClassifier(n_neighbors=3)
+    clf0.fit(X_train, y_train)
+    predicted0 = clf0.predict(X_test)
+    # use my own
+    clf1 = myKNN(n_neighbors=3)
+    clf1.fit(X_train, y_train)
+    predicted1 = clf1.predict(X_test)
+    print(predicted1)
+    print('the difference of confusion matrix is:')
 
-    clf.fit(X_train, y_train)
-    print(clf.score(X_test,y_test))
+    confusion_matrix_0 = confusion_matrix(y_test, predicted1)
+    confusion_matrix_1 = confusion_matrix(y_test, predicted0)
 
-    predicted = clf.predict(X_test)
-    confusion_matrix(y_test, predicted)
+    print('score of built-in classifier is :', clf0.score(X_test, y_test))
+    time_start = time()
+    print('score of classifier written by myself is: ', clf1.score(X_test, y_test))
+    time_end = time()
+    print('time cost of my : %.3f' % (time_end - time_start))
 
-    image_with_prediction = list(zip(digits.images, clf.predict(X)))
+    # image_with_prediction = list(zip(digits.images, clf0.predict(X)))
 
-    for pos, (image, prediction) in enumerate(image_with_prediction[:20]):
-        plt.subplot(4, 5, pos + 1)
-        plt.axis('off')
-        plt.imshow(image, cmap=plt.cm.gray_r)
-        plt.title("Prediction: %i" % prediction)
+    # for pos, (image, prediction) in enumerate(image_with_prediction[:20]):
+    #     plt.subplot(4, 5, pos + 1)
+    #     plt.axis('off')
+    #     plt.imshow(image, cmap=plt.cm.gray_r)
+    #     plt.title("Prediction: %i" % prediction)
+    #
+    # plt.show()
 
-    plt.show()
+
+class myKNN(object):
+    train_data = []
+    train_label = []
+    k = 0
+    score = 0
+
+    def __init__(self, n_neighbors):
+        self.k = n_neighbors
+
+    def fit(self, X_train, y_train):
+        self.train_data = X_train
+        self.train_label = y_train
+
+    def predict(self, X_test):
+        result = []
+        for i in range(X_test.shape[0]):
+            result.append(self.KNN(X_test[i]))
+        return result
+
+    def score(self, X_test, y_test):
+        error_num = 0
+        for i in range(X_test.shape[0]):
+            result = self.KNN(X_test[i])
+            # print('the classifier result is {},and the real num is {}.'.format(result, y_test[i]))
+            if result != y_test[i]:
+                error_num += 1
+        return 1 - (error_num / X_test.shape[0])
+
+    def KNN(self, index):
+        data_set_size = self.train_data.shape[0]
+        diff_mat = np.tile(index, (data_set_size, 1)) - self.train_data
+        distances = ((diff_mat ** 2).sum(axis=1)) ** 0.5
+        sorted_dist_indices = np.argsort(distances, axis=0)
+        class_count = {}
+        for i in range(self.k):
+            neigh_label = self.train_label[sorted_dist_indices[i]]
+            class_count[neigh_label] = class_count.get(neigh_label, 0) + 1
+        sorted_class_count = sorted(class_count.items())
+        return sorted_class_count[0][0]
 
 
 if __name__ == "__main__":
