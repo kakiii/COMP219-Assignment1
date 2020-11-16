@@ -17,6 +17,7 @@ def main():
     clf = KNeighborsClassifier(n_neighbors=3)
 
     clf.fit(X_train, y_train)
+    print(clf.score(X_test,y_test))
 
     predicted = clf.predict(X_test)
     confusion_matrix(y_test, predicted)
