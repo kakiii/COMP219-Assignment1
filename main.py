@@ -20,7 +20,7 @@ def main():
     X = digits.images.reshape((n_samples, -1))
     y = digits.target
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1313)
     # use the built-in clf
     clf0 = KNeighborsClassifier(n_neighbors=3)
     clf0.fit(X_train, y_train)
@@ -29,7 +29,7 @@ def main():
     clf1 = myKNN(n_neighbors=3)
     clf1.fit(X_train, y_train)
     predicted1 = clf1.predict(X_test)
-    print(predicted1)
+    #print(predicted1)
     print('the difference of confusion matrix is:')
 
     confusion_matrix_0 = confusion_matrix(y_test, predicted1)
