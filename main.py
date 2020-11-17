@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_digits
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, plot_confusion_matrix
 from sklearn.model_selection import train_test_split
 
 
@@ -12,15 +12,24 @@ from sklearn.model_selection import train_test_split
 
 def main():
     digits = load_digits()
-
-    n_samples = len(digits.images)
-    print('the number of instance is: ', digits.data.shape[1])
-    print('the number of features of instance is', digits.data.shape[1])
-
-    X = digits.images.reshape((n_samples, -1))
+    num = len(digits.images)
+    X = digits.images.reshape((num, -1))
     y = digits.target
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=1313)
+
+    print('the dataset I use is the digits dataset')
+    print('the number of classes is: ', len(digits.target_names))
+    print('the number of data in each class is: ', end="")
+    for i in range(len(np.bincount(y))):
+        print(np.bincount(y)[i], end="")
+        if len(np.bincount(y)) - i != 1:
+            print(', ', end='')
+        else:
+            print()
+    print('the number of instance is: ', num)
+    print('the number of features of instance is', digits.data.shape[1])
+
     # use the built-in clf
     clf0 = KNeighborsClassifier(n_neighbors=3)
     clf0.fit(X_train, y_train)
@@ -29,17 +38,18 @@ def main():
     clf1 = myKNN(n_neighbors=3)
     clf1.fit(X_train, y_train)
     predicted1 = clf1.predict(X_test)
-    #print(predicted1)
-    print('the difference of confusion matrix is:')
+    # print(predicted1)
 
     confusion_matrix_0 = confusion_matrix(y_test, predicted1)
     confusion_matrix_1 = confusion_matrix(y_test, predicted0)
 
+    print('the confusion matrices of built-in classifier is:\n', confusion_matrix_0)
+    print('the confusion matrix of my own classifier is:\n', confusion_matrix_1)
     print('score of built-in classifier is :', clf0.score(X_test, y_test))
     time_start = time()
     print('score of classifier written by myself is: ', clf1.score(X_test, y_test))
     time_end = time()
-    print('time cost of my : %.3f' % (time_end - time_start))
+    print('time cost of my own classifier : %.3f' % (time_end - time_start))
 
     # image_with_prediction = list(zip(digits.images, clf0.predict(X)))
 
@@ -50,7 +60,19 @@ def main():
     #     plt.title("Prediction: %i" % prediction)
     #
     # plt.show()
+    titles_options = [("Confusion matrix, without normalization", None),
+                      ("Normalized confusion matrix", 'true')]
+    for title, normalize in titles_options:
+        disp = plot_confusion_matrix(clf1, X_test, y_test,
+                                     display_labels=digits.target_names,
+                                     cmap=plt.cm.Blues,
+                                     normalize=normalize)
+        disp.ax_.set_title(title)
 
+        print(title)
+        print(disp.confusion_matrix)
+
+    plt.show()
 
 class myKNN(object):
     train_data = []
