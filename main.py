@@ -33,21 +33,26 @@ def main():
     # use the built-in clf
     clf0 = KNeighborsClassifier(n_neighbors=3)
     clf0.fit(X_train, y_train)
-    predicted0 = clf0.predict(X_test)
+    predicted0_train = clf0.predict(X_train)
+    predicted0_test = clf0.predict(X_test)
+
     # use my own
     clf1 = myKNN(n_neighbors=3)
     clf1.fit(X_train, y_train)
-    predicted1 = clf1.predict(X_test)
+    predicted1_train = clf1.predict(X_train)
+    predicted1_test = clf1.predict(X_test)
     # print(predicted1)
 
-    confusion_matrix_0 = confusion_matrix(y_test, predicted1)
-    confusion_matrix_1 = confusion_matrix(y_test, predicted0)
+    confusion_matrix_0_train = confusion_matrix(y_train, predicted0_train)
+    confusion_matrix_0_test = confusion_matrix(y_test, predicted0_test)
+    confusion_matrix_1_train = confusion_matrix(y_train, predicted1_train)
+    confusion_matrix_1_test = confusion_matrix(y_test, predicted1_test)
 
-    print('the confusion matrices of built-in classifier is:\n', confusion_matrix_0)
-    print('the confusion matrix of my own classifier is:\n', confusion_matrix_1)
-    print('score of built-in classifier is :', clf0.score(X_test, y_test))
+    print('the confusion matrices of built-in classifier are:\n', confusion_matrix_0_train,'\n', confusion_matrix_0_test)
+    print('the confusion matrices of my own classifier are:\n', confusion_matrix_1_train,'\n',confusion_matrix_1_test)
+    print('scores of built-in classifier are :', clf0.score(X_train, y_train), clf0.score(X_test, y_test))
     time_start = time()
-    print('score of classifier written by myself is: ', clf1.score(X_test, y_test))
+    print('score of classifier written by myself is: ', clf1.score(X_train, y_train), clf1.score(X_test, y_test))
     time_end = time()
     print('time cost of my own classifier : %.3f' % (time_end - time_start))
 
@@ -62,17 +67,18 @@ def main():
     # plt.show()
     titles_options = [("Confusion matrix, without normalization", None),
                       ("Normalized confusion matrix", 'true')]
-    for title, normalize in titles_options:
-        disp = plot_confusion_matrix(clf1, X_test, y_test,
-                                     display_labels=digits.target_names,
-                                     cmap=plt.cm.Blues,
-                                     normalize=normalize)
-        disp.ax_.set_title(title)
+    # for title, normalize in titles_options:
+    #     disp = plot_confusion_matrix(clf1, X_test, y_test,
+    #                                  display_labels=digits.target_names,
+    #                                  cmap=plt.cm.Blues,
+    #                                  normalize=normalize)
+    #     disp.ax_.set_title(title)
+    #
+    #     print(title)
+    #     print(disp.confusion_matrix)
+    #
+    # plt.show()
 
-        print(title)
-        print(disp.confusion_matrix)
-
-    plt.show()
 
 class myKNN(object):
     train_data = []
