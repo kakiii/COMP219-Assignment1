@@ -56,29 +56,6 @@ def main():
     time_end = time()
     print('time cost of my own classifier : %.3f' % (time_end - time_start))
 
-    # image_with_prediction = list(zip(digits.images, clf0.predict(X)))
-
-    # for pos, (image, prediction) in enumerate(image_with_prediction[:20]):
-    #     plt.subplot(4, 5, pos + 1)
-    #     plt.axis('off')
-    #     plt.imshow(image, cmap=plt.cm.gray_r)
-    #     plt.title("Prediction: %i" % prediction)
-    #
-    # plt.show()
-    titles_options = [("Confusion matrix, without normalization", None),
-                      ("Normalized confusion matrix", 'true')]
-    # for title, normalize in titles_options:
-    #     disp = plot_confusion_matrix(clf1, X_test, y_test,
-    #                                  display_labels=digits.target_names,
-    #                                  cmap=plt.cm.Blues,
-    #                                  normalize=normalize)
-    #     disp.ax_.set_title(title)
-    #
-    #     print(title)
-    #     print(disp.confusion_matrix)
-    #
-    # plt.show()
-
 
 class myKNN(object):
     train_data = []
