@@ -18,9 +18,9 @@ For the file `my_clf.py`, it simply depends on `numpy`.
 
 1. Since it's a dataset returning a two-dimensional matrix, it is very easy to know that the number of instances is the number of rows and the number of features for each one is the number of columns. I print these two numbers out with some explanation.
 
-2. I choose *K Nearest Neighbor* (KNN) as my algorithm, so it does not have a model as it is really **"lazy"** as it won't train the data input. Instead, it just stores it in and do nothing. As a result, there are only 2 files with 2 model files *missing*. I checked out some docs about built-in KNN classifier and then deployed it in my code.
-3. I learnt it from lecture 10 and 11 and used **Euclidean distance** to computer the difference between training data and testing data. Similarly, I also wrote some methods like `predict()` , `score()` and `fit()`( actually it really does nothing apart from storing data).
-4. Although KNN actually does nothing to the input data for training, it still can distinguish each of samples, comparing it with the whole bunch of data. I supposed it should be 100% for the accuracy rate, however it is not. I printed both of scores of the classifiers with train data and test data, along with the confusion matrices.
+2. I choose *K Nearest Neighbor* (KNN) as my algorithm, so it does not have a model as it is really **"lazy"** :  it won't train the data input. Instead, it just stores it in and do nothing. As a result, there are only 2 files(main.py and this report) with 2 model files *missing*. 
+3. I learnt it from lecture 10 and 11 and used **Euclidean distance** to computer the difference between training data and testing data. Similarly, I also wrote some methods like `predict()` , `score()` and `fit()`.
+4. Although KNN actually does nothing to the input data for training, it still can distinguish each of samples, comparing it with the whole bunch of data. I supposed it should be 100% for the accuracy rate, however it is not. I used `pandas` for the data structure of `frames` and use the `heatmap` from `seaborn` to draw the confusion matrices.
 5. I don't have saved models, but users can change their input in the `main.py` file.
 
 ### Additional Requirements

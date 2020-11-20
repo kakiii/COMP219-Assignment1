@@ -1,5 +1,7 @@
 from time import time
 import numpy as np
+import seaborn as sn
+import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.datasets import load_digits
 from sklearn.neighbors import KNeighborsClassifier
@@ -13,6 +15,7 @@ from sklearn.model_selection import train_test_split
 def main():
     digits = load_digits()
     num = len(digits.images)
+    labels = list(digits.target_names)
     X = digits.images.reshape((num, -1))
     y = digits.target
 
@@ -20,6 +23,7 @@ def main():
 
     print('the dataset I use is the digits dataset')
     print('the number of classes is: ', len(digits.target_names))
+    print('target names are', labels)
     print('the number of data in each class is: ', end="")
     for i in range(len(np.bincount(y))):
         print(np.bincount(y)[i], end="")
@@ -48,8 +52,11 @@ def main():
     confusion_matrix_1_train = confusion_matrix(y_train, predicted1_train)
     confusion_matrix_1_test = confusion_matrix(y_test, predicted1_test)
 
-    print('the confusion matrices of built-in classifier are:\n', confusion_matrix_0_train,'\n', confusion_matrix_0_test)
-    print('the confusion matrices of my own classifier are:\n', confusion_matrix_1_train,'\n',confusion_matrix_1_test)
+    plot_confusion_matrix(confusion_matrix_0_test, labels, 'Built-in Classifier for test data')
+    plot_confusion_matrix(confusion_matrix_0_train, labels, 'Built-in Classifier for train data')
+    plot_confusion_matrix(confusion_matrix_1_test, labels, 'My Classifier for test data')
+    plot_confusion_matrix(confusion_matrix_1_train, labels, 'My Classifier for train data')
+
     print('scores of built-in classifier are :', clf0.score(X_train, y_train), clf0.score(X_test, y_test))
     time_start = time()
     print('score of classifier written by myself is: ', clf1.score(X_train, y_train), clf1.score(X_test, y_test))
@@ -96,6 +103,14 @@ class myKNN(object):
             class_count[neigh_label] = class_count.get(neigh_label, 0) + 1
         sorted_class_count = sorted(class_count.items())
         return sorted_class_count[0][0]
+
+
+def plot_confusion_matrix(data, labels, title):
+    df_cm = pd.DataFrame(data, index=labels, columns=labels)
+    plt.figure(figsize=(10, 7))
+    plt.title(title)
+    sn.heatmap(df_cm, annot=True)
+    plt.show()
 
 
 if __name__ == "__main__":
